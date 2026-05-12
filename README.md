@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Agent Quartet Harness
 
-## Getting Started
+Claude Code のサブエージェント4体によるスプリント駆動開発ハーネス。
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+@planner → @generator → @designer → @evaluator
+                ↑                        │
+                └── 不合格時のフィードバック ──┘
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 4つのエージェント
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| エージェント | 役割 | model |
+|---|---|---|
+| **@planner** | 短いプロンプトから製品仕様書とスプリント計画を生成 | opus |
+| **@generator** | スプリント契約に基づいてコードを実装 | opus |
+| **@designer** | デザイントークンでUIを仕上げ | opus |
+| **@evaluator** | Playwright MCP で実操作テスト・合否判定 | opus |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## セットアップ
 
-## Learn More
+1. このリポジトリの `.claude/agents/` と `CLAUDE.md` を自分のプロジェクトにコピーする
+2. デザイントークンを `/docs/design-tokens.md` に用意する
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# 例: 自分のプロジェクトにコピー
+cp -r .claude/agents/ /path/to/your-project/.claude/agents/
+cp CLAUDE.md /path/to/your-project/CLAUDE.md
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 使い方
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 1. 計画
 
-## Deploy on Vercel
+```
+@planner 動画プラットフォームを作りたい。ユーザーが動画をアップロードして視聴できるサービス。
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 2. 実装
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+@generator Sprint 1を実装して
+```
+
+### 3. デザイン
+
+```
+@designer Sprint 1のデザインを仕上げて
+```
+
+### 4. 評価
+
+```
+@evaluator Sprint 1を評価して
+```
+
+Evaluator が合格を出したら次のスプリントへ。不合格なら修正指示に従って該当エージェントに戻す。
+
+## ファイル構成
+
+```
+your-project/
+├── CLAUDE.md                      # オーケストレーションルール
+├── .claude/agents/
+│   ├── planner.md                 # 仕様策定エージェント
+│   ├── generator.md               # 実装エージェント
+│   ├── designer.md                # デザインエージェント
+│   └── evaluator.md               # QAエージェント
+└── docs/
+    ├── spec.md                    # 製品仕様書（Planner が生成）
+    ├── design-tokens.md           # デザイントークン（ユーザーが用意）
+    └── sprints/
+        ├── sprint-1.md
+        ├── sprint-2.md
+        └── ...
+```
+
+## 前提条件
+
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) が使える環境
+- Playwright MCP サーバーの設定（Evaluator・Designer が使用）
+
+## ライセンス
+
+MIT
