@@ -16,6 +16,7 @@ import {
 } from "@/lib/questions";
 import { ArrowRightIcon } from "@/app/_components/icons";
 import { useGlobalKey } from "@/lib/useGlobalKey";
+import { KeyCap } from "@/app/session/_components/KeyCap";
 import { OptionList } from "./OptionList";
 import { ShortageNotice } from "./ShortageNotice";
 
@@ -85,6 +86,15 @@ export function StartSelectionForm() {
   }, []);
   useGlobalKey("Enter", handleEnter);
 
+  /**
+   * Escape キーでホーム (/) に戻る。
+   * 既存 `useGlobalKey` が IME / 修飾キー / 入力欄をすべて担保する。
+   */
+  const handleEscape = useCallback(() => {
+    router.push("/");
+  }, [router]);
+  useGlobalKey("Escape", handleEscape);
+
   const isShort =
     matchingCount !== null && matchingCount < SESSION_SIZE;
 
@@ -118,6 +128,13 @@ export function StartSelectionForm() {
         >
           <span aria-hidden="true">←</span>
           <span>Home</span>
+          {/* PC 幅でのみ Esc キーのヒントを表示 */}
+          <span
+            data-testid="start-back-key-hint"
+            className="ml-1 hidden md:inline-flex"
+          >
+            <KeyCap>Esc</KeyCap>
+          </span>
         </Link>
       </header>
 
@@ -210,11 +227,20 @@ export function StartSelectionForm() {
             </span>
             <span className="mt-0.5 text-lg">この設定で開始</span>
           </span>
-          <span
-            aria-hidden="true"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-on-primary-faint transition-transform duration-200 group-hover:translate-x-0.5"
-          >
-            <ArrowRightIcon />
+          <span className="flex items-center gap-2">
+            {/* PC 幅でのみ Enter キーのヒントを表示 */}
+            <span
+              data-testid="start-confirm-key-hint"
+              className="hidden md:inline-flex"
+            >
+              <KeyCap tone="on-primary">Enter</KeyCap>
+            </span>
+            <span
+              aria-hidden="true"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-on-primary-faint transition-transform duration-200 group-hover:translate-x-0.5"
+            >
+              <ArrowRightIcon />
+            </span>
           </span>
         </button>
       </section>

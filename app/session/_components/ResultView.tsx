@@ -2,6 +2,7 @@ import Link from "next/link";
 import { RefreshIcon } from "@/app/_components/icons";
 import type { AnswerLog } from "../types";
 import { ResultBreakdown } from "./ResultBreakdown";
+import { KeyCap } from "./KeyCap";
 
 type Props = {
   logs: AnswerLog[];
@@ -129,6 +130,7 @@ export function ResultView({
         <button
           type="button"
           onClick={onRestart}
+          data-testid="result-restart"
           className="group flex w-full items-center justify-between rounded-lg bg-primary px-6 py-4 text-left font-semibold text-on-primary shadow-md transition-[transform,background-color] duration-150 hover:bg-primary-hover active:scale-[0.985] active:bg-primary-hover"
           style={{ minHeight: 56 }}
         >
@@ -138,19 +140,36 @@ export function ResultView({
             </span>
             <span className="mt-0.5 text-base">もう1セット</span>
           </span>
-          <span
-            aria-hidden="true"
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-on-primary-faint"
-          >
-            <RefreshIcon />
+          <span className="flex items-center gap-2">
+            {/* PC 幅でのみ Enter キーのヒントを表示 */}
+            <span
+              data-testid="result-restart-key-hint"
+              className="hidden md:inline-flex"
+            >
+              <KeyCap tone="on-primary">Enter</KeyCap>
+            </span>
+            <span
+              aria-hidden="true"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-on-primary-faint"
+            >
+              <RefreshIcon />
+            </span>
           </span>
         </button>
         <Link
           href="/"
-          className="flex w-full items-center justify-center rounded-lg border border-ink px-6 py-4 text-center text-base font-semibold text-ink active:scale-[0.985]"
+          data-testid="result-home"
+          className="flex w-full items-center justify-center gap-2 rounded-lg border border-ink px-6 py-4 text-center text-base font-semibold text-ink active:scale-[0.985]"
           style={{ minHeight: 48 }}
         >
-          ホームに戻る
+          <span>ホームに戻る</span>
+          {/* PC 幅でのみ Esc キーのヒントを表示 */}
+          <span
+            data-testid="result-home-key-hint"
+            className="hidden md:inline-flex"
+          >
+            <KeyCap>Esc</KeyCap>
+          </span>
         </Link>
       </div>
     </main>

@@ -21,9 +21,12 @@ type Props = {
 export function AbortButton({ onClick }: Props) {
   return (
     <div className="flex flex-col items-end gap-1.5 pt-6">
+      {/* PC 幅 (md 以上) でのみ「Esc」mono ラベルを表示。
+          スマホでは非表示 (機能と a11y は維持) */}
       <span
         aria-hidden="true"
-        className="font-mono text-[10px] tracking-[0.22em] text-ink-muted uppercase"
+        data-testid="abort-key-hint"
+        className="hidden md:flex font-mono text-[10px] tracking-[0.22em] text-ink-muted uppercase"
       >
         Esc
       </span>

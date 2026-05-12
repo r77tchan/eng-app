@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { KeyCap } from "./KeyCap";
 
 type Props = {
   onConfirm: () => void;
@@ -128,11 +129,20 @@ export function AbortConfirmDialog({ onConfirm, onCancel }: Props) {
               </span>
               <span className="mt-0.5 text-[15px]">中断する</span>
             </span>
-            <span
-              aria-hidden="true"
-              className="font-mono text-[10px] tracking-[0.22em] text-bg/70 uppercase"
-            >
-              Exit
+            <span className="flex items-center gap-2">
+              {/* PC 幅でのみ Enter キーのヒントを表示 */}
+              <span
+                data-testid="abort-confirm-key-hint"
+                className="hidden md:inline-flex"
+              >
+                <KeyCap tone="on-primary">Enter</KeyCap>
+              </span>
+              <span
+                aria-hidden="true"
+                className="font-mono text-[10px] tracking-[0.22em] text-bg/70 uppercase"
+              >
+                Exit
+              </span>
             </span>
           </button>
           <button
@@ -149,11 +159,20 @@ export function AbortConfirmDialog({ onConfirm, onCancel }: Props) {
               </span>
               <span className="mt-0.5 text-[15px]">続ける</span>
             </span>
-            <span
-              aria-hidden="true"
-              className="font-mono text-[10px] tracking-[0.22em] text-ink-muted uppercase"
-            >
-              Stay
+            <span className="flex items-center gap-2">
+              {/* PC 幅でのみ Esc キーのヒントを表示 */}
+              <span
+                data-testid="abort-cancel-key-hint"
+                className="hidden md:inline-flex"
+              >
+                <KeyCap>Esc</KeyCap>
+              </span>
+              <span
+                aria-hidden="true"
+                className="font-mono text-[10px] tracking-[0.22em] text-ink-muted uppercase"
+              >
+                Stay
+              </span>
             </span>
           </button>
         </div>

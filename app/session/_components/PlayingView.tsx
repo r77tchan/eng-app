@@ -1,13 +1,16 @@
+"use client";
+
+import type { MouseEvent } from "react";
 import type { Question, SessionFilter } from "@/lib/questions";
 import type { AnswerLog } from "../types";
 import { SessionProgress } from "./SessionProgress";
 import { QuestionCard } from "./QuestionCard";
 import { ChoiceButton } from "./ChoiceButton";
-import { NextButton } from "./NextButton";
 import { SessionFilterBanner } from "./SessionFilterBanner";
 import { AbortButton } from "./AbortButton";
 import { DontKnowButton } from "./DontKnowButton";
 import { KeyboardHints } from "./KeyboardHints";
+import { WeblioLinkButton } from "./WeblioLinkButton";
 
 type Props = {
   questions: Question[];
@@ -32,6 +35,34 @@ type Props = {
   onSpeak: () => void;
 };
 
+/**
+ * フィードバック中の「画面クリックで次へ進む」判定。
+ *
+ * - 以下の要素クリックは次へ進めない (専用アクションを優先):
+ *   - 中断ボタン (`abort-button`)
+ *   - Weblio リンクボタン (`weblio-link-button`)
+ *   - 単語の音声再生ボタン (`speak-button`)
+ *   - BottomNav 内のリンク (`bottom-nav`) — feedback 中も非表示だが防御的に
+ *   - その他 button / a (4 択は disabled だが念のため closest("button") で除外)
+ */
+function isClickToNext(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) return false;
+  // 除外対象の testid を持つ祖先があるか
+  const blockedTestIds = [
+    "abort-button",
+    "weblio-link-button",
+    "speak-button",
+    "bottom-nav",
+  ];
+  for (const id of blockedTestIds) {
+    if (target.closest(`[data-testid="${id}"]`)) return false;
+  }
+  // button / a への直接クリック (4 択や DontKnow など) も除外
+  if (target.closest("button")) return false;
+  if (target.closest("a")) return false;
+  return true;
+}
+
 export function PlayingView({
   questions,
   currentIndex,
@@ -53,10 +84,20 @@ export function PlayingView({
 }: Props) {
   const total = questions.length;
   const isCorrect = isFeedback && selected === currentQuestion.answer;
-  const isLast = currentIndex >= total - 1;
+
+  const handleScreenClick = (event: MouseEvent<HTMLElement>) => {
+    if (!isFeedback) return;
+    if (!isClickToNext(event.target)) return;
+    onNext();
+  };
 
   return (
-    <main className="flex min-h-screen w-full flex-col px-6">
+    <main
+      className="flex min-h-screen w-full flex-col px-6"
+      data-testid="playing-view"
+      data-feedback={isFeedback ? "true" : "false"}
+      onClick={handleScreenClick}
+    >
       {/* Sprint 6: 上部右寄せに中断ボタンを置く。SessionProgress とは
           flex 並びにして横スクロールを発生させない。AbortButton 側で pt-6 を
           持つので、ここでは外側 padding を持たず縦リズムを揃える */}
@@ -106,12 +147,12 @@ export function PlayingView({
         {/* Sprint 6: 4 択の下に控えめに「わからない」を置く */}
         <DontKnowButton isFeedback={isFeedback} onClick={onSkip} />
 
-        {isFeedback && <NextButton isLast={isLast} onClick={onNext} />}
+        {/* フィードバック中は Weblio リンクボタンを表示 (NextButton は廃止) */}
+        {isFeedback && <WeblioLinkButton word={currentQuestion.word} />}
       </section>
 
       {/* Sprint 8: PC 幅 (md 以上) でのみキーボード操作ヒントを表示。
-          アクション群とは独立した足元に置くことで、フィードバック時の
-          NextButton がヒントを画面外へ押し出さないようにする */}
+          Enter NEXT 表示は維持 (Enter キーで次へ進める旨を示す) */}
       <KeyboardHints />
     </main>
   );
