@@ -80,6 +80,46 @@ your-project/
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) が使える環境
 - Playwright MCP サーバーの設定（Evaluator・Designer が使用）
 
+## このプロジェクト (CommuteEnglish) のビルド方法
+
+このリポジトリはハーネスのデモを兼ねた CommuteEnglish (英単語学習WEBアプリ) の実装でもある。
+Next.js の `output: 'export'` による静的書き出しで GitHub Pages にデプロイすることを想定している。
+
+### 開発サーバー
+
+```bash
+npm install
+npm run dev
+# → http://localhost:3000 で起動
+```
+
+### 静的書き出し (GitHub Pages 用)
+
+```bash
+# ルート配信 (basePath なし) でビルド
+npm run build
+
+# GitHub Pages のサブパス配信用にビルド
+# NEXT_PUBLIC_BASE_PATH に <リポジトリ名> を渡す
+NEXT_PUBLIC_BASE_PATH=/eng-app npm run build
+
+# 生成された静的ファイルをローカルで確認
+npm run preview
+# → http://localhost:5173
+```
+
+ビルド結果は `out/` ディレクトリに生成される。
+`out/` の中身をそのまま GitHub Pages にデプロイすればよい。
+
+### 主要ファイル
+
+- `next.config.ts` — `output: 'export'` と `basePath` / `assetPrefix` の設定
+- `app/page.tsx` — ホーム画面
+- `app/session/page.tsx` — 学習セッション画面 + 結果画面
+- `public/data/questions.json` — 問題プール (英単語 4 択)
+- `lib/questions.ts` — 問題ロード・シャッフル
+- `lib/basePath.ts` — サブパス配信対応の URL ユーティリティ
+
 ## ライセンス
 
 MIT

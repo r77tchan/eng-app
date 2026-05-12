@@ -5,6 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:pages": "NEXT_PUBLIC_BASE_PATH=${NEXT_PUBLIC_BASE_PATH:-/eng-app} next build",
+    "export": "next build",
+    "preview": "npx serve out -l 5173",
     "start": "next start",
     "lint": "eslint"
   },

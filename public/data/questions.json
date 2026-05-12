@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "questions": [
+    {
+      "id": "q001",
+      "word": "apple",
+      "answer": "りんご",
+      "choices": ["りんご", "ぶどう", "みかん", "もも"]
+    },
+    {
+      "id": "q002",
+      "word": "book",
+      "answer": "本",
+      "choices": ["本", "机", "椅子", "鉛筆"]
+    },
+    {
+      "id": "q003",
+      "word": "run",
+      "answer": "走る",
+      "choices": ["歩く", "走る", "泳ぐ", "飛ぶ"]
+    },
+    {
+      "id": "q004",
+      "word": "happy",
+      "answer": "幸せな",
+      "choices": ["悲しい", "怒った", "幸せな", "退屈な"]
+    },
+    {
+      "id": "q005",
+      "word": "river",
+      "answer": "川",
+      "choices": ["海", "湖", "川", "池"]
+    },
+    {
+      "id": "q006",
+      "word": "buy",
+      "answer": "買う",
+      "choices": ["売る", "買う", "貸す", "借りる"]
+    },
+    {
+      "id": "q007",
+      "word": "morning",
+      "answer": "朝",
+      "choices": ["朝", "昼", "夕方", "夜"]
+    },
+    {
+      "id": "q008",
+      "word": "difficult",
+      "answer": "難しい",
+      "choices": ["簡単な", "難しい", "面白い", "新しい"]
+    },
+    {
+      "id": "q009",
+      "word": "remember",
+      "answer": "覚えている",
+      "choices": ["忘れる", "覚えている", "考える", "夢を見る"]
+    },
+    {
+      "id": "q010",
+      "word": "quickly",
+      "answer": "素早く",
+      "choices": ["ゆっくり", "静かに", "素早く", "丁寧に"]
+    },
+    {
+      "id": "q011",
+      "word": "introduce",
+      "answer": "紹介する",
+      "choices": ["紹介する", "招待する", "歓迎する", "案内する"]
+    },
+    {
+      "id": "q012",
+      "word": "expensive",
+      "answer": "高価な",
+      "choices": ["安い", "高価な", "新しい", "便利な"]
+    },
+    {
+      "id": "q013",
+      "word": "borrow",
+      "answer": "借りる",
+      "choices": ["貸す", "借りる", "返す", "預ける"]
+    },
+    {
+      "id": "q014",
+      "word": "weather",
+      "answer": "天気",
+      "choices": ["季節", "気温", "天気", "風"]
+    },
+    {
+      "id": "q015",
+      "word": "decide",
+      "answer": "決める",
+      "choices": ["迷う", "選ぶ", "決める", "諦める"]
+    }
+  ]
+}
