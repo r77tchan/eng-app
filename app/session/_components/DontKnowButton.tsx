@@ -20,6 +20,16 @@ type Props = {
  * - hover で text-ink まで持ち上げて反応を返す
  */
 export function DontKnowButton({ isFeedback, onClick }: Props) {
+  // フィードバック中は無効状態:
+  // - hover での色変化を抑制 (反応しないボタンが動いて見えるのを防ぐ)
+  // - cursor-not-allowed で「押せない」ことを明示
+  // - 透明度を下げて視覚的に背景に沈める
+  const buttonCls = isFeedback
+    ? "text-ink-muted/40 cursor-not-allowed"
+    : "text-ink-muted hover:text-ink";
+  const underlineCls = isFeedback
+    ? "decoration-line/50"
+    : "decoration-line group-hover:decoration-ink";
   return (
     <button
       type="button"
@@ -33,18 +43,24 @@ export function DontKnowButton({ isFeedback, onClick }: Props) {
       aria-disabled={isFeedback ? "true" : undefined}
       data-testid="dont-know-button"
       aria-keyshortcuts="Space"
-      className="group mt-1 flex w-full items-center justify-center gap-2.5 rounded-md px-4 py-2.5 text-sm font-semibold text-ink-muted transition-colors duration-150 hover:text-ink aria-disabled:opacity-50"
+      className={`group mt-1 flex w-full items-center justify-center gap-2.5 rounded-md px-4 py-2.5 text-sm font-semibold transition-colors duration-150 ${buttonCls}`}
       style={{ minHeight: 44 }}
     >
       <span
         aria-hidden="true"
         className="inline-flex items-center gap-1.5 font-mono text-[10px] tracking-[0.22em] uppercase"
       >
-        <span className="inline-block h-1.5 w-1.5 rounded-full bg-warning" />
+        <span
+          className={`inline-block h-1.5 w-1.5 rounded-full ${
+            isFeedback ? "bg-warning/40" : "bg-warning"
+          }`}
+        />
         <span>Don&apos;t know</span>
       </span>
       <span aria-hidden="true" className="h-3 w-px self-center bg-line" />
-      <span className="underline decoration-line decoration-dotted underline-offset-4 group-hover:decoration-ink">
+      <span
+        className={`underline decoration-dotted underline-offset-4 ${underlineCls}`}
+      >
         わからない
       </span>
       {/* Sprint 8: PC 幅でのみ Space キーのヒントを表示。スマホ幅は変更なし */}
