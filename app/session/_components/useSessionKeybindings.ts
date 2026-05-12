@@ -14,10 +14,15 @@ import { useEffect } from "react";
  *    - 1〜4 / Enter / Space は無視
  *    - Escape は「閉じる」(onAbortCancel) を呼ぶ
  * - 数字キー (1〜4) は `phase === "playing"` 時のみ発火 (feedback 中の連打防止)
- * - Enter は `phase === "feedback"` 時のみ発火
+ * - Enter は `phase === "feedback"` 時のみ発火 (next)
  * - Space は `phase === "playing"` 時のみ発火、`preventDefault` で
  *   ブラウザのページスクロールを抑制する
  * - Escape は playing / feedback 両方で発火し、中断確認モーダルを開く
+ *
+ * Sprint 8 拡張 (result phase):
+ * - Enter で `onRestart` (もう 1 セット) を発火する
+ * - Escape で `onResultExit` (ホームに戻る) を発火する
+ * - 1〜4 / Space は result phase では引き続き無視 (誤発火防止)
  *
  * React 19 ルール: `useEffect` body 内では `addEventListener` のみで、
  * 同期的な setState はしない (state 更新は受け取ったハンドラ経由 = イベントハンドラ内で行われる)
@@ -36,6 +41,10 @@ type Params = {
   onSkip: () => void;
   onAbortRequest: () => void;
   onAbortCancel: () => void;
+  /** Sprint 8 拡張: 結果画面で Enter を押したときに呼ぶ「もう 1 セット」 */
+  onRestart: () => void;
+  /** Sprint 8 拡張: 結果画面で Escape を押したときに呼ぶ「ホームに戻る」 */
+  onResultExit: () => void;
 };
 
 function isEditableElement(target: EventTarget | null): boolean {
@@ -55,11 +64,14 @@ export function useSessionKeybindings({
   onSkip,
   onAbortRequest,
   onAbortCancel,
+  onRestart,
+  onResultExit,
 }: Params) {
   useEffect(() => {
-    // セッション中 (playing / feedback) のみリスナを張る。
-    // loading / error / result では何もしない (= 副作用範囲を最小化)
-    if (phase !== "playing" && phase !== "feedback") return;
+    // playing / feedback / result の各 phase でリスナを張る。
+    // loading / error 中は何もしない (= 副作用範囲を最小化)
+    if (phase !== "playing" && phase !== "feedback" && phase !== "result")
+      return;
 
     function handler(event: KeyboardEvent) {
       // IME 入力中は完全に無視
@@ -71,11 +83,27 @@ export function useSessionKeybindings({
 
       const key = event.key;
 
-      // モーダルが開いているときは Escape だけを受ける
+      // モーダルが開いているときは Escape だけを受ける (cancel)。
+      // Enter は AbortConfirmDialog 側で confirm を発火するのでここでは無視する。
       if (abortDialogOpen) {
         if (key === "Escape") {
           event.preventDefault();
           onAbortCancel();
+        }
+        return;
+      }
+
+      // 結果画面: Enter で Restart、Escape でホーム遷移。1〜4 / Space は無視。
+      if (phase === "result") {
+        if (key === "Enter") {
+          event.preventDefault();
+          onRestart();
+          return;
+        }
+        if (key === "Escape") {
+          event.preventDefault();
+          onResultExit();
+          return;
         }
         return;
       }
@@ -109,8 +137,6 @@ export function useSessionKeybindings({
       // Enter: 次へ (feedback のみ)
       if (key === "Enter") {
         if (phase !== "feedback") return;
-        // 注意: 結果画面 (result) ではこのリスナは張られない (上の早期 return)
-        // ので「もう 1 セット」が誤動作することはない
         event.preventDefault();
         onNext();
         return;
@@ -130,5 +156,7 @@ export function useSessionKeybindings({
     onSkip,
     onAbortRequest,
     onAbortCancel,
+    onRestart,
+    onResultExit,
   ]);
 }

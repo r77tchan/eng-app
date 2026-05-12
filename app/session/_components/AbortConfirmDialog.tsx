@@ -15,6 +15,14 @@ type Props = {
  * Sprint 8 追加: 初期フォーカスを「続ける」に当て (誤 Enter で中断しない)、
  * Tab/Shift+Tab を confirm⇄cancel の閉ループに閉じ込める focus trap。
  * Escape による閉じる動作はグローバル useSessionKeybindings 側で onCancel が呼ばれる。
+ *
+ * Sprint 8 拡張:
+ * - Enter キーで「中断する」(confirm) を発火する (一般的な UX 規約: Enter = 主アクション確定)
+ * - 初期フォーカスは「続ける」のまま (誤クリックで Enter を不意打ちされないように、
+ *   ユーザーがダイアログを認識してから明示的に Enter を押す形)
+ * - Enter キーはモーダル中だけ有効。preventDefault してフォーカス済みボタンの
+ *   デフォルト動作 (cancel ボタンに当たっていれば cancel) と衝突しないようにする
+ * - Escape は引き続き useSessionKeybindings 側で onCancel を呼ぶので、ここでは扱わない
  */
 export function AbortConfirmDialog({ onConfirm, onCancel }: Props) {
   const dialogRef = useRef<HTMLDivElement | null>(null);
@@ -28,27 +36,41 @@ export function AbortConfirmDialog({ onConfirm, onCancel }: Props) {
 
   // フォーカストラップ: Tab / Shift+Tab で confirm⇄cancel の閉ループに閉じ込める。
   // 2 要素しかないので「アクティブ要素の反対側」へ移すだけで Tab/Shift+Tab 双方向に対応できる。
+  // Sprint 8 拡張: Enter キーで「中断する」(onConfirm) を発火する。
   useEffect(() => {
     function handleKeydown(event: KeyboardEvent) {
-      if (event.key !== "Tab") return;
-      const confirmEl = confirmButtonRef.current;
-      const cancelEl = cancelButtonRef.current;
-      if (!confirmEl || !cancelEl) return;
-      const active = document.activeElement;
-      const isInside = active === confirmEl || active === cancelEl;
-      event.preventDefault();
-      if (!isInside) {
-        cancelEl.focus();
+      if (event.key === "Tab") {
+        const confirmEl = confirmButtonRef.current;
+        const cancelEl = cancelButtonRef.current;
+        if (!confirmEl || !cancelEl) return;
+        const active = document.activeElement;
+        const isInside = active === confirmEl || active === cancelEl;
+        event.preventDefault();
+        if (!isInside) {
+          cancelEl.focus();
+          return;
+        }
+        const next = active === cancelEl ? confirmEl : cancelEl;
+        next.focus();
         return;
       }
-      const next = active === cancelEl ? confirmEl : cancelEl;
-      next.focus();
+
+      if (event.key === "Enter") {
+        if (event.isComposing || event.keyCode === 229) return;
+        if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey)
+          return;
+        // フォーカス済みボタン (例: 続ける) の標準クリック動作と衝突しないように
+        // preventDefault してからグローバルに confirm を発火する
+        event.preventDefault();
+        onConfirm();
+        return;
+      }
     }
     document.addEventListener("keydown", handleKeydown);
     return () => {
       document.removeEventListener("keydown", handleKeydown);
     };
-  }, []);
+  }, [onConfirm]);
 
   return (
     <div

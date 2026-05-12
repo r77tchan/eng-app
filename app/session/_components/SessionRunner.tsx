@@ -238,9 +238,17 @@ export function SessionRunner({ onRestart }: Props) {
     };
   }, []);
 
+  // Sprint 8 拡張: 結果画面で Escape を押したときの「ホームに戻る」ハンドラ。
+  // Restart は onRestart prop が既にあるのでそのまま渡す。
+  const handleResultExit = useCallback(() => {
+    cancelSpeech();
+    router.push("/");
+  }, [router]);
+
   // Sprint 8: PC キーボード操作
   // - 1〜4 で選択肢、Enter で次へ、Space で「わからない」、Escape で中断
   // - 詳細な発火条件は `useSessionKeybindings` 側に局所化
+  // - Sprint 8 拡張: 結果画面では Enter=Restart, Escape=ホーム遷移
   useSessionKeybindings({
     phase,
     abortDialogOpen,
@@ -250,6 +258,8 @@ export function SessionRunner({ onRestart }: Props) {
     onSkip: handleSkip,
     onAbortRequest: handleAbortRequest,
     onAbortCancel: handleAbortCancel,
+    onRestart,
+    onResultExit: handleResultExit,
   });
 
   const reviewDelta = useMemo(

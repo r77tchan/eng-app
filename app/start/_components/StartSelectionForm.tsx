@@ -15,6 +15,7 @@ import {
   type Difficulty,
 } from "@/lib/questions";
 import { ArrowRightIcon } from "@/app/_components/icons";
+import { useGlobalKey } from "@/lib/useGlobalKey";
 import { OptionList } from "./OptionList";
 import { ShortageNotice } from "./ShortageNotice";
 
@@ -69,6 +70,20 @@ export function StartSelectionForm() {
     setPendingSessionFilter({ category, difficulty });
     router.push("/session");
   }, [category, difficulty, router]);
+
+  /**
+   * Sprint 8 拡張: /start で Enter キーを押すと「この設定で開始」を発火する。
+   * OptionList の選択肢は radio button なので、フォーカスがあると Space/Arrow で操作される。
+   * Enter 自体は radio button の標準動作では使われないので、衝突しない。
+   * IME / 修飾キー / 入力欄判定は useGlobalKey 側で処理済み。
+   */
+  const handleEnter = useCallback(() => {
+    const el = document.querySelector<HTMLButtonElement>(
+      '[data-testid="start-confirm"]',
+    );
+    el?.click();
+  }, []);
+  useGlobalKey("Enter", handleEnter);
 
   const isShort =
     matchingCount !== null && matchingCount < SESSION_SIZE;

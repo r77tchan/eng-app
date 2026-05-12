@@ -6,6 +6,7 @@ import { useCallback } from "react";
 import { ArrowRightIcon } from "./icons";
 import { useSettings } from "@/lib/useSettings";
 import { setPendingSessionFilter } from "@/lib/pendingSession";
+import { useGlobalKey } from "@/lib/useGlobalKey";
 
 /**
  * ホームのメイン CTA。Sprint 5 から「既定カテゴリ・既定難易度」設定の有無で挙動が変わる。
@@ -31,6 +32,22 @@ export function StartSessionCTA() {
     });
     router.push("/session");
   }, [router, settings.defaultCategory, settings.defaultDifficulty]);
+
+  /**
+   * Sprint 8 拡張: ホーム画面で Enter キーを押すと CTA を発火する。
+   *
+   * - 既定値あり (button) → button.click() で `handleDirectStart` が動く
+   * - 既定値なし (Link) → anchor.click() でブラウザが /start に遷移
+   * - DOM の `data-testid="home-start-cta"` を click() するだけで両者を同一に扱える
+   * - ホーム画面以外でこのフックは呼ばれない (StartSessionCTA は HomePage 専用)
+   */
+  const handleEnter = useCallback(() => {
+    const el = document.querySelector<HTMLElement>(
+      '[data-testid="home-start-cta"]',
+    );
+    el?.click();
+  }, []);
+  useGlobalKey("Enter", handleEnter);
 
   const ctaLabel = hasBothDefaults
     ? "既定の設定で開始"
