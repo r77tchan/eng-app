@@ -43,7 +43,9 @@ type Props = {
  *   - Weblio リンクボタン (`weblio-link-button`)
  *   - 単語の音声再生ボタン (`speak-button`)
  *   - BottomNav 内のリンク (`bottom-nav`) — feedback 中も非表示だが防御的に
- *   - その他 button / a (4 択は disabled だが念のため closest("button") で除外)
+ *   - 操作可能 (disabled でない) な button / a
+ * - 4 択や「わからない」のような disabled ボタンの上をクリックした場合は
+ *   ユーザーの期待 (画面のどこでもクリックで次へ) に合わせて進める
  */
 function isClickToNext(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
@@ -57,8 +59,11 @@ function isClickToNext(target: EventTarget | null): boolean {
   for (const id of blockedTestIds) {
     if (target.closest(`[data-testid="${id}"]`)) return false;
   }
-  // button / a への直接クリック (4 択や DontKnow など) も除外
-  if (target.closest("button")) return false;
+  // disabled でない button への直接クリックは除外
+  // (4 択や DontKnow はフィードバック中 disabled なのでスルーされ、進む)
+  const btn = target.closest("button");
+  if (btn && !(btn as HTMLButtonElement).disabled) return false;
+  // a 要素はそのまま除外 (disabled 属性がない)
   if (target.closest("a")) return false;
   return true;
 }
