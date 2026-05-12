@@ -16,12 +16,21 @@
 export type AnswerRecord = {
   /** 問題の ID (questions.json の id) */
   questionId: string;
-  /** ユーザーが選んだ選択肢 */
+  /** ユーザーが選んだ選択肢。「わからない」の場合は空文字列 "" を入れる */
   selected: string;
-  /** 正誤 */
+  /** 正誤。「わからない」は誤答扱いなので false */
   correct: boolean;
   /** 解答日時 (ISO 8601 文字列) */
   answeredAt: string;
+  /**
+   * Sprint 6 追加: 「わからない」と回答したか。
+   *
+   * 後方互換: 既存ユーザーの LocalStorage には本フィールドが無いため、
+   * `undefined` は `false` (= 通常の誤答) とみなす。
+   * 既存の集計関数 (getTodayStats / getStreak / getDailyStats / accuracyPercent) は
+   * 本フィールドを参照しないため挙動は不変。
+   */
+  skipped?: boolean;
 };
 
 type StoredPayload = {
@@ -71,11 +80,15 @@ function readPayload(): StoredPayload {
 function isValidRecord(r: unknown): r is AnswerRecord {
   if (typeof r !== "object" || r === null) return false;
   const x = r as Record<string, unknown>;
+  // Sprint 6: skipped はオプショナル。boolean か undefined のみ許容する。
+  // 既存レコード (skipped 未指定) も読み込めるよう、未指定でも valid とみなす。
+  const skippedOk = x.skipped === undefined || typeof x.skipped === "boolean";
   return (
     typeof x.questionId === "string" &&
     typeof x.selected === "string" &&
     typeof x.correct === "boolean" &&
-    typeof x.answeredAt === "string"
+    typeof x.answeredAt === "string" &&
+    skippedOk
   );
 }
 
@@ -97,12 +110,19 @@ export function appendAnswerLog(
 ): void {
   const answeredAt = record.answeredAt ?? new Date().toISOString();
   const payload = readPayload();
-  payload.records.push({
+  const next: AnswerRecord = {
     questionId: record.questionId,
     selected: record.selected,
     correct: record.correct,
     answeredAt,
-  });
+  };
+  // Sprint 6: skipped が明示的に true の時だけ書き込む。
+  // false / undefined は永続化時にも省略してストレージサイズを抑えつつ、
+  // 既存スキーマと完全に同形を保ち、ロールバック耐性を高める。
+  if (record.skipped === true) {
+    next.skipped = true;
+  }
+  payload.records.push(next);
   writePayload(payload);
   invalidateSnapshot();
   notifyListeners();

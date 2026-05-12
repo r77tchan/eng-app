@@ -33,7 +33,10 @@ export function SessionProgress({ currentIndex, total, isFeedback, logs }: Props
           const log = logs[i];
           let cls = "bg-line";
           if (done && log) {
-            cls = log.correct ? "bg-success" : "bg-error";
+            // Sprint 6: 「わからない」回答は warning 色で誤答 (error) と区別する
+            if (log.correct) cls = "bg-success";
+            else if (log.skipped) cls = "bg-warning";
+            else cls = "bg-error";
           } else if (active) {
             cls = "bg-ink";
           }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { RefreshIcon } from "@/app/_components/icons";
 import type { AnswerLog } from "../types";
+import { ResultBreakdown } from "./ResultBreakdown";
 
 type Props = {
   logs: AnswerLog[];
@@ -9,6 +10,8 @@ type Props = {
   reviewAdded: number;
   /** このセッションで復習キューから卒業した問題数 (Sprint 3) */
   reviewGraduated: number;
+  /** Sprint 6: このセッションで「わからない」と回答した問題数 */
+  skippedCount: number;
   onRestart: () => void;
 };
 
@@ -17,6 +20,7 @@ export function ResultView({
   total,
   reviewAdded,
   reviewGraduated,
+  skippedCount,
   onRestart,
 }: Props) {
   const correctCount = logs.filter((l) => l.correct).length;
@@ -65,17 +69,8 @@ export function ResultView({
           Accuracy · {percent}%
         </p>
 
-        <ol className="mt-8 flex items-center gap-2" aria-label="セッション内訳">
-          {logs.map((l, i) => (
-            <li
-              key={`${l.questionId}-${i}`}
-              className={`h-2.5 w-2.5 rounded-full ${
-                l.correct ? "bg-success" : "bg-error"
-              }`}
-              aria-label={`${i + 1}問目: ${l.correct ? "正解" : "不正解"}`}
-            />
-          ))}
-        </ol>
+        {/* Sprint 6: セッション内訳ドット + 凡例 + Skipped 件数を ResultBreakdown に分離 */}
+        <ResultBreakdown logs={logs} skippedCount={skippedCount} />
 
         {/* 復習キューに対する差分 (Sprint 3 契約条件)
          *

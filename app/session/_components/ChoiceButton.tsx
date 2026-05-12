@@ -45,6 +45,7 @@ export function ChoiceButton({
       disabled={isFeedback}
       data-testid="choice"
       data-correct={isAnswer ? "true" : "false"}
+      aria-keyshortcuts={String(index + 1)}
       className={`flex w-full items-center gap-3 rounded-lg border-2 px-4 py-3.5 text-left text-base font-semibold transition-[background-color,border-color,opacity,transform] duration-150 active:scale-[0.985] disabled:active:scale-100 ${containerCls}`}
       style={{ minHeight: 56 }}
     >

@@ -14,7 +14,7 @@ const APP_BUILD = "Sprint · 5/5";
  */
 export function AppAboutSection() {
   return (
-    <SettingsSection badge="05" shortLabel="About" title="アプリ情報">
+    <SettingsSection badge="06" shortLabel="About" title="アプリ情報">
       <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 border-t border-line pt-3">
         <dt className="font-mono text-[10px] tracking-[0.18em] text-ink-muted uppercase">
           Version
@@ -29,6 +29,12 @@ export function AppAboutSection() {
           Build
         </dt>
         <dd className="font-mono text-[13px] text-ink">{APP_BUILD}</dd>
+        <dt className="font-mono text-[10px] tracking-[0.18em] text-ink-muted uppercase">
+          TTS
+        </dt>
+        <dd className="font-mono text-[13px] text-ink-muted">
+          Web Speech API · en-US
+        </dd>
         <dt className="font-mono text-[10px] tracking-[0.18em] text-ink-muted uppercase">
           Storage
         </dt>

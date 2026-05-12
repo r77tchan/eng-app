@@ -20,8 +20,16 @@ export type ThemeMode = "system" | "light" | "dark";
 export type Settings = {
   /** テーマ: "system" はブラウザの prefers-color-scheme に追従 */
   theme: ThemeMode;
-  /** 効果音 ON/OFF */
+  /** 効果音 ON/OFF (正誤フィードバック音) */
   soundEnabled: boolean;
+  /**
+   * Sprint 7: 単語読み上げ ON/OFF (Web Speech API / TTS)
+   *
+   * 「効果音 (soundEnabled)」とは独立した別概念として扱う。
+   * 既定値は true。既存ユーザー (このフィールドが LocalStorage に無い) も
+   * 読み込み時に true で扱われ、後方互換を維持する。
+   */
+  speechEnabled: boolean;
   /** 既定カテゴリ (null = 未設定 = ホームから /start 経由) */
   defaultCategory: Category | null;
   /** 既定難易度 (null = 未設定 = ホームから /start 経由) */
@@ -39,6 +47,7 @@ const SCHEMA_VERSION = 1;
 export const DEFAULT_SETTINGS: Settings = {
   theme: "system",
   soundEnabled: true,
+  speechEnabled: true,
   defaultCategory: null,
   defaultDifficulty: null,
 };
@@ -76,6 +85,11 @@ function sanitize(raw: unknown): Settings {
     typeof x.soundEnabled === "boolean"
       ? x.soundEnabled
       : DEFAULT_SETTINGS.soundEnabled;
+  // Sprint 7: 既存ペイロードに speechEnabled が無くてもエラーにせず既定値で扱う
+  const speechEnabled =
+    typeof x.speechEnabled === "boolean"
+      ? x.speechEnabled
+      : DEFAULT_SETTINGS.speechEnabled;
   const defaultCategory =
     typeof x.defaultCategory === "string" &&
     ALLOWED_CATEGORIES.has(x.defaultCategory as Category)
@@ -86,7 +100,13 @@ function sanitize(raw: unknown): Settings {
     ALLOWED_DIFFICULTIES.has(x.defaultDifficulty as Difficulty)
       ? (x.defaultDifficulty as Difficulty)
       : null;
-  return { theme, soundEnabled, defaultCategory, defaultDifficulty };
+  return {
+    theme,
+    soundEnabled,
+    speechEnabled,
+    defaultCategory,
+    defaultDifficulty,
+  };
 }
 
 function readPayload(): StoredPayload {

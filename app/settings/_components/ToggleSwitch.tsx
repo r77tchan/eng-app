@@ -6,6 +6,8 @@ type Props = {
   testId: string;
   checked: boolean;
   onChange: (v: boolean) => void;
+  /** Sprint 7: 環境非対応時など、操作を無効化する */
+  disabled?: boolean;
 };
 
 /**
@@ -14,6 +16,7 @@ type Props = {
  * - role="switch" / aria-checked で a11y 対応
  * - タップ領域 56x44 を確保 (片手操作要件)
  * - 状態を `data-checked` 属性に反映し、Playwright から判定可能
+ * - Sprint 7: `disabled` 対応 (例: 単語読み上げが非対応ブラウザ)
  */
 export function ToggleSwitch({
   label,
@@ -21,22 +24,45 @@ export function ToggleSwitch({
   testId,
   checked,
   onChange,
+  disabled = false,
 }: Props) {
   return (
     <button
       type="button"
       role="switch"
       aria-checked={checked}
+      aria-disabled={disabled || undefined}
+      disabled={disabled}
       data-testid={testId}
       data-checked={checked ? "true" : "false"}
-      onClick={() => onChange(!checked)}
-      className="flex w-full items-center justify-between gap-3 rounded-md border border-line bg-bg px-4 py-3 text-left transition-colors duration-150 hover:border-ink/40"
+      data-disabled={disabled ? "true" : "false"}
+      onClick={() => {
+        if (disabled) return;
+        onChange(!checked);
+      }}
+      className={`flex w-full items-center justify-between gap-3 rounded-md border border-line bg-bg px-4 py-3 text-left transition-colors duration-150 ${
+        disabled
+          ? "cursor-not-allowed opacity-60"
+          : "hover:border-ink/40"
+      }`}
       style={{ minHeight: 56 }}
     >
       <span className="flex min-w-0 flex-col">
-        <span className="text-[14px] font-semibold text-ink">{label}</span>
+        <span
+          className={`text-[14px] font-semibold ${
+            disabled ? "text-ink-muted" : "text-ink"
+          }`}
+        >
+          {label}
+        </span>
         {description ? (
-          <span className="mt-0.5 text-[12px] leading-snug text-ink-muted">
+          <span
+            className={
+              disabled
+                ? "mt-1 font-mono text-[10px] leading-snug tracking-[0.18em] text-ink-muted uppercase"
+                : "mt-0.5 text-[12px] leading-snug text-ink-muted"
+            }
+          >
             {description}
           </span>
         ) : null}
@@ -44,7 +70,7 @@ export function ToggleSwitch({
       <span
         aria-hidden="true"
         className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors duration-150 ${
-          checked ? "bg-accent" : "bg-line"
+          disabled ? "bg-line" : checked ? "bg-accent" : "bg-line"
         }`}
       >
         <span

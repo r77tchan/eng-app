@@ -1,4 +1,5 @@
 import { ArrowRightIcon } from "@/app/_components/icons";
+import { KeyCap } from "./KeyCap";
 
 type Props = {
   isLast: boolean;
@@ -11,6 +12,7 @@ export function NextButton({ isLast, onClick }: Props) {
       type="button"
       onClick={onClick}
       data-testid="next-button"
+      aria-keyshortcuts="Enter"
       className="group mt-3 flex w-full items-center justify-between rounded-lg bg-primary px-6 py-4 text-left font-semibold text-on-primary shadow-md transition-[transform,background-color] duration-150 hover:bg-primary-hover active:scale-[0.985] active:bg-primary-hover animate-pop-in"
       style={{ minHeight: 56 }}
     >
@@ -22,11 +24,20 @@ export function NextButton({ isLast, onClick }: Props) {
           {isLast ? "結果を見る" : "次へ"}
         </span>
       </span>
-      <span
-        aria-hidden="true"
-        className="flex h-8 w-8 items-center justify-center rounded-full bg-on-primary-faint transition-transform duration-200 group-hover:translate-x-0.5"
-      >
-        <ArrowRightIcon width={14} height={14} />
+      <span className="flex items-center gap-2">
+        {/* Sprint 8: PC 幅でのみ Enter キーのヒントを表示。スマホ幅では非表示 */}
+        <span
+          data-testid="next-key-hint"
+          className="hidden md:inline-flex"
+        >
+          <KeyCap tone="on-primary">Enter</KeyCap>
+        </span>
+        <span
+          aria-hidden="true"
+          className="flex h-8 w-8 items-center justify-center rounded-full bg-on-primary-faint transition-transform duration-200 group-hover:translate-x-0.5"
+        >
+          <ArrowRightIcon width={14} height={14} />
+        </span>
       </span>
     </button>
   );

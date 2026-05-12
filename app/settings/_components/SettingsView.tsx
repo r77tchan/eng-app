@@ -6,6 +6,8 @@ import type { Category, Difficulty } from "@/lib/questions";
 import { updateSettings, type ThemeMode } from "@/lib/settings";
 import { useSettings } from "@/lib/useSettings";
 import { playFeedbackSound } from "@/lib/sound";
+import { speakWord } from "@/lib/speech";
+import { useSpeechSupported } from "@/lib/useSpeechSupported";
 import { SettingsHeader } from "./SettingsHeader";
 import { SettingsSection } from "./SettingsSection";
 import { SegmentedControl } from "./SegmentedControl";
@@ -30,11 +32,15 @@ const THEME_OPTIONS: ReadonlyArray<{
  *   01 / Defaults — 既定カテゴリ / 既定難易度
  *   02 / Theme    — ライト / ダーク / 自動
  *   03 / Sound    — 効果音 ON/OFF (テスト再生付き)
- *   04 / Data     — 学習データのリセット
- *   05 / About    — バージョン情報
+ *   04 / Speech   — 単語読み上げ ON/OFF (Sprint 7)
+ *   05 / Data     — 学習データのリセット
+ *   06 / About    — バージョン情報
  */
 export function SettingsView() {
   const settings = useSettings();
+
+  // Sprint 7: Web Speech API 対応判定 (SSR では false / マウント後に実値)
+  const speechSupported = useSpeechSupported();
 
   const handleCategory = useCallback((v: Category | null) => {
     updateSettings({ defaultCategory: v });
@@ -49,6 +55,16 @@ export function SettingsView() {
     updateSettings({ soundEnabled: v });
     if (v) playFeedbackSound(true, true);
   }, []);
+  // Sprint 7: 単語読み上げトグル。ON にした瞬間にサンプル発話 (どのトグルか分かるように)
+  const handleSpeech = useCallback(
+    (v: boolean) => {
+      updateSettings({ speechEnabled: v });
+      if (v && speechSupported) {
+        speakWord("hello", true);
+      }
+    },
+    [speechSupported],
+  );
 
   return (
     <main
@@ -132,8 +148,31 @@ export function SettingsView() {
         />
       </SettingsSection>
 
+      {/* Sprint 7: 単語読み上げ。効果音 (03) とは独立した別セクション。 */}
       <SettingsSection
         badge="04"
+        shortLabel="Speech"
+        title="単語読み上げ"
+        description="出題時に英単語を音声 (TTS) で発音します。効果音とは独立して設定できます。"
+      >
+        <ToggleSwitch
+          label="単語の自動読み上げ"
+          description={
+            !speechSupported
+              ? "お使いのブラウザでは利用できません"
+              : settings.speechEnabled
+                ? "出題時に英単語が読み上げられます"
+                : "音声は再生されません"
+          }
+          testId="speech-toggle"
+          checked={speechSupported ? settings.speechEnabled : false}
+          onChange={speechSupported ? handleSpeech : () => {}}
+          disabled={!speechSupported}
+        />
+      </SettingsSection>
+
+      <SettingsSection
+        badge="05"
         shortLabel="Data"
         title="学習データ"
         description="この端末に保存された学習履歴・復習キューを削除できます。"
