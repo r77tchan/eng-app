@@ -24,11 +24,13 @@ export function ChoiceButton({
 
   if (isFeedback) {
     if (isAnswer) {
-      containerCls = "border-success bg-success text-white";
-      badgeCls = "border-white/30 bg-white/15 text-white";
+      // success/error 面の上は常に bg-token を文字色に使う:
+      //   light: 緑/赤の上に白文字 / dark: 明色の上に暗文字 → 両方で読める
+      containerCls = "border-success bg-success text-bg";
+      badgeCls = "border-bg/30 bg-bg/15 text-bg";
     } else if (isThisSelected) {
-      containerCls = "border-error bg-error text-white";
-      badgeCls = "border-white/30 bg-white/15 text-white";
+      containerCls = "border-error bg-error text-bg";
+      badgeCls = "border-bg/30 bg-bg/15 text-bg";
     } else {
       containerCls =
         "border-line bg-bg text-ink-muted opacity-60";

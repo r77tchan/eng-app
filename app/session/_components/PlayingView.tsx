@@ -1,9 +1,10 @@
-import type { Question } from "@/lib/questions";
+import type { Question, SessionFilter } from "@/lib/questions";
 import type { AnswerLog } from "../types";
 import { SessionProgress } from "./SessionProgress";
 import { QuestionCard } from "./QuestionCard";
 import { ChoiceButton } from "./ChoiceButton";
 import { NextButton } from "./NextButton";
+import { SessionFilterBanner } from "./SessionFilterBanner";
 
 type Props = {
   questions: Question[];
@@ -13,6 +14,9 @@ type Props = {
   isFeedback: boolean;
   selected: string | null;
   logs: AnswerLog[];
+  filter: SessionFilter;
+  fallbackUsed: boolean;
+  matchingPoolSize: number;
   onSelect: (choice: string) => void;
   onNext: () => void;
 };
@@ -25,6 +29,9 @@ export function PlayingView({
   isFeedback,
   selected,
   logs,
+  filter,
+  fallbackUsed,
+  matchingPoolSize,
   onSelect,
   onNext,
 }: Props) {
@@ -39,6 +46,12 @@ export function PlayingView({
         total={total}
         isFeedback={isFeedback}
         logs={logs}
+      />
+
+      <SessionFilterBanner
+        filter={filter}
+        fallbackUsed={fallbackUsed}
+        matchingPoolSize={matchingPoolSize}
       />
 
       <QuestionCard

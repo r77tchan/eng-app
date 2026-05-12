@@ -69,6 +69,75 @@ export function XIcon({
   );
 }
 
+export function HomeIcon({
+  width = 18,
+  height = 18,
+  ...rest
+}: IconProps) {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 20 20"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...rest}
+    >
+      <path d="M3 9l7-6 7 6v8a1 1 0 0 1-1 1h-3v-5H7v5H4a1 1 0 0 1-1-1V9z" />
+    </svg>
+  );
+}
+
+export function HistoryIcon({
+  width = 18,
+  height = 18,
+  ...rest
+}: IconProps) {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 20 20"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...rest}
+    >
+      <path d="M3 10a7 7 0 1 0 2.05-4.95" />
+      <path d="M3 4v3h3" />
+      <path d="M10 6v5l3 2" />
+    </svg>
+  );
+}
+
+export function SettingsIcon({
+  width = 18,
+  height = 18,
+  ...rest
+}: IconProps) {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 20 20"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...rest}
+    >
+      <circle cx="10" cy="10" r="2.4" />
+      <path d="M10 1.5v2.4M10 16.1v2.4M2.6 5.7l2.1 1.2M15.3 13.1l2.1 1.2M1.5 10h2.4M16.1 10h2.4M2.6 14.3l2.1-1.2M15.3 6.9l2.1-1.2" />
+    </svg>
+  );
+}
+
 export function RefreshIcon({
   width = 14,
   height = 14,

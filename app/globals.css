@@ -4,7 +4,7 @@
 /* Design Tokens (from /docs/design-tokens.md)                         */
 /* ------------------------------------------------------------------ */
 :root {
-  /* Colors */
+  /* Colors (Light theme — design tokens) */
   --color-primary: #000000;
   --color-primary-hover: #1a1a1a;
   --color-bg: #ffffff;
@@ -17,6 +17,20 @@
   --color-success: #22c55e;
   --color-error: #ef4444;
   --color-warning: #f59e0b;
+
+  /* On-color text tokens (Sprint 5 / 駅看板トーンを保ったまま dark でも反転コントラスト)
+     - on-primary : --color-primary 背景に乗る文字色 (light=白 / dark=黒)
+     - on-accent  : --color-accent 背景に乗る文字色 (常に白基調)
+     - on-success / on-error : 強い背景色に乗る文字色 (常に白基調) */
+  --color-on-primary: #ffffff;
+  --color-on-primary-soft: rgba(255, 255, 255, 0.6);
+  --color-on-primary-faint: rgba(255, 255, 255, 0.12);
+  --color-on-accent: #ffffff;
+
+  /* Status の "soft" 表現 (淡い面と濃い文字を分離して、dark でも読めるように)
+     light では成功=濃い緑、dark では明るい success/error をそのまま乗せる。 */
+  --color-success-strong: #15803d;
+  --color-error-strong: #b91c1c;
 
   /* Typography */
   --font-sans-tokens: "Inter", system-ui, -apple-system, sans-serif;
@@ -55,6 +69,41 @@
 }
 
 /* ------------------------------------------------------------------ */
+/* Dark theme (Sprint 5)                                                */
+/* `<html data-theme="dark">` で適用される。                            */
+/* デザイントークンの意図 (ニュートラル基調 + accent #0066ff) を維持しつつ、 */
+/* 夜間の通勤時に目が痛くならない明度に下げる。                          */
+/* ------------------------------------------------------------------ */
+:root[data-theme="dark"] {
+  --color-primary: #ffffff;
+  --color-primary-hover: #e6e6e6;
+  --color-bg: #0a0a0a;
+  --color-bg-secondary: #161616;
+  --color-text: #f5f5f5;
+  --color-text-secondary: #a3a3a3;
+  --color-accent: #4d8dff;
+  --color-accent-hover: #6ba2ff;
+  --color-border: #2a2a2a;
+  --color-success: #34d399;
+  --color-error: #f87171;
+  --color-warning: #fbbf24;
+
+  /* dark では primary 背景 (=白) に対して黒インクを乗せる */
+  --color-on-primary: #0a0a0a;
+  --color-on-primary-soft: rgba(10, 10, 10, 0.55);
+  --color-on-primary-faint: rgba(10, 10, 10, 0.12);
+  --color-on-accent: #ffffff;
+
+  /* dark のフィードバック面は明色 (success/error) をそのまま読めるように */
+  --color-success-strong: #34d399;
+  --color-error-strong: #f87171;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.6);
+}
+
+/* ------------------------------------------------------------------ */
 /* Tailwind v4 theme bridge                                            */
 /* ------------------------------------------------------------------ */
 @theme inline {
@@ -70,6 +119,12 @@
   --color-success: var(--color-success);
   --color-error: var(--color-error);
   --color-warning: var(--color-warning);
+  --color-on-primary: var(--color-on-primary);
+  --color-on-primary-soft: var(--color-on-primary-soft);
+  --color-on-primary-faint: var(--color-on-primary-faint);
+  --color-on-accent: var(--color-on-accent);
+  --color-success-strong: var(--color-success-strong);
+  --color-error-strong: var(--color-error-strong);
 
   --font-sans: var(--font-inter), var(--font-sans-tokens);
   --font-mono: var(--font-jetbrains), var(--font-mono-tokens);

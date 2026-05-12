@@ -110,14 +110,64 @@ npm run preview
 
 ビルド結果は `out/` ディレクトリに生成される。
 `out/` の中身をそのまま GitHub Pages にデプロイすればよい。
+`out/.nojekyll` が自動生成されるため、`_next` 等のアンダースコア始まりの
+ディレクトリも Jekyll に消されない。
+
+### GitHub Pages へのデプロイ (Sprint 5)
+
+#### 自動デプロイ (推奨)
+
+`.github/workflows/deploy.yml` に GitHub Actions のワークフローを同梱している。
+
+1. GitHub リポジトリの **Settings → Pages → Build and deployment → Source**
+   を **"GitHub Actions"** に切り替える
+2. `main` ブランチに push する
+3. Actions タブでビルドが緑になるのを待つ
+4. 完了すると `https://<user>.github.io/<repo>/` で公開される
+
+ワークフローは以下を行う:
+
+- `npm ci` で依存をインストール
+- `npm run lint` で lint エラーをチェック
+- `NEXT_PUBLIC_BASE_PATH=/${{ repository.name }}` を渡して `npm run build`
+- `out/.nojekyll` を生成
+- `actions/upload-pages-artifact` で artifact 化
+- `actions/deploy-pages` で Pages にデプロイ
+
+#### 手動デプロイ
+
+```bash
+NEXT_PUBLIC_BASE_PATH=/eng-app npm run build
+# 生成された out/ を任意の方法で push (例: gh-pages ブランチ)
+```
+
+#### サブパス URL のローカル確認
+
+```bash
+NEXT_PUBLIC_BASE_PATH=/eng-app npm run build
+mkdir -p /tmp/pages/eng-app && cp -r out/* /tmp/pages/eng-app/
+npx http-server /tmp/pages -p 5173
+# → http://localhost:5173/eng-app/
+```
+
+### PWA (Sprint 5)
+
+- `app/manifest.ts` — Web App Manifest (ビルド時に `out/manifest.webmanifest` として書き出し)
+- `public/sw.js` — Service Worker (network-first for HTML / cache-first for assets)
+- `public/icons/icon-192.png` `icon-512.png` — PWA ホーム画面アイコン
+- `app/_components/RegisterServiceWorker.tsx` — クライアントマウント時に SW を `/${basePath}/sw.js` で登録
+- `app/_components/ThemeApplier.tsx` — `<html data-theme>` を切り替えてライト/ダーク対応
 
 ### 主要ファイル
 
 - `next.config.ts` — `output: 'export'` と `basePath` / `assetPrefix` の設定
 - `app/page.tsx` — ホーム画面
 - `app/session/page.tsx` — 学習セッション画面 + 結果画面
+- `app/settings/page.tsx` — 設定画面 (テーマ / 効果音 / 既定カテゴリ・難易度 / リセット)
 - `public/data/questions.json` — 問題プール (英単語 4 択)
 - `lib/questions.ts` — 問題ロード・シャッフル
+- `lib/settings.ts` — ユーザー設定の永続化 (LocalStorage)
+- `lib/sound.ts` — 正誤フィードバック効果音 (Web Audio API シンセ)
 - `lib/basePath.ts` — サブパス配信対応の URL ユーティリティ
 
 ## ライセンス

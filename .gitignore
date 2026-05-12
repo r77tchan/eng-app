@@ -42,3 +42,12 @@ next-env.d.ts
 
 # playwright MCP artifacts (Evaluator が生成するスクショ・ログ・スナップショット)
 /.playwright-mcp/
+
+# プロジェクトルートに誤って吐き出されるスクリーンショット類 (Designer/Evaluator の作業漏れ対策)
+# `public/` 配下や `app/` 配下の正規アセットには影響しない
+/*.png
+/*.jpg
+/*.jpeg
+/*.webp
+/*.gif
+/*.yml

@@ -1,0 +1,77 @@
+name: Deploy to GitHub Pages
+
+# Sprint 5: GitHub Pages へ静的サイトをデプロイするワークフロー。
+#
+# - main ブランチへの push と手動 dispatch をトリガとする
+# - Next.js の `output: 'export'` で `out/` を生成
+# - サブパス配信に対応するため、NEXT_PUBLIC_BASE_PATH を
+#   `/${{ github.event.repository.name }}` で渡す
+# - `out/.nojekyll` を作成して Jekyll パイプラインを無効化する
+#   (GitHub Pages のデフォルトは Jekyll で、`_next` 等のアンダースコア
+#   始まりのディレクトリが無視されてしまうのを防ぐため)
+#
+# 設定:
+# - リポジトリの Settings → Pages → Build and deployment → Source を
+#   "GitHub Actions" に切り替えること
+# - リポジトリ名と異なるサブパスで公開したい場合は env: BASE_PATH を変更
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同一参照の進行中デプロイを 1 件に絞る
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build (static export with basePath)
+        env:
+          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+        run: npm run build
+
+      - name: Add .nojekyll
+        run: touch out/.nojekyll
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

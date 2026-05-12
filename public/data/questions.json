@@ -1,95 +1,486 @@
 {
-  "version": 1,
+  "version": 2,
   "questions": [
     {
       "id": "q001",
       "word": "apple",
       "answer": "りんご",
-      "choices": ["りんご", "ぶどう", "みかん", "もも"]
+      "choices": ["りんご", "ぶどう", "みかん", "もも"],
+      "category": "daily",
+      "difficulty": "beginner"
     },
     {
       "id": "q002",
       "word": "book",
       "answer": "本",
-      "choices": ["本", "机", "椅子", "鉛筆"]
+      "choices": ["本", "机", "椅子", "鉛筆"],
+      "category": "daily",
+      "difficulty": "beginner"
     },
     {
       "id": "q003",
       "word": "run",
       "answer": "走る",
-      "choices": ["歩く", "走る", "泳ぐ", "飛ぶ"]
+      "choices": ["歩く", "走る", "泳ぐ", "飛ぶ"],
+      "category": "daily",
+      "difficulty": "beginner"
     },
     {
       "id": "q004",
       "word": "happy",
       "answer": "幸せな",
-      "choices": ["悲しい", "怒った", "幸せな", "退屈な"]
+      "choices": ["悲しい", "怒った", "幸せな", "退屈な"],
+      "category": "daily",
+      "difficulty": "beginner"
     },
     {
       "id": "q005",
       "word": "river",
       "answer": "川",
-      "choices": ["海", "湖", "川", "池"]
+      "choices": ["海", "湖", "川", "池"],
+      "category": "daily",
+      "difficulty": "beginner"
     },
     {
       "id": "q006",
-      "word": "buy",
-      "answer": "買う",
-      "choices": ["売る", "買う", "貸す", "借りる"]
+      "word": "morning",
+      "answer": "朝",
+      "choices": ["朝", "昼", "夕方", "夜"],
+      "category": "daily",
+      "difficulty": "beginner"
     },
     {
       "id": "q007",
-      "word": "morning",
-      "answer": "朝",
-      "choices": ["朝", "昼", "夕方", "夜"]
+      "word": "kitchen",
+      "answer": "台所",
+      "choices": ["寝室", "台所", "浴室", "玄関"],
+      "category": "daily",
+      "difficulty": "beginner"
     },
     {
       "id": "q008",
-      "word": "difficult",
-      "answer": "難しい",
-      "choices": ["簡単な", "難しい", "面白い", "新しい"]
+      "word": "remember",
+      "answer": "覚えている",
+      "choices": ["忘れる", "覚えている", "考える", "夢を見る"],
+      "category": "daily",
+      "difficulty": "intermediate"
     },
     {
       "id": "q009",
-      "word": "remember",
-      "answer": "覚えている",
-      "choices": ["忘れる", "覚えている", "考える", "夢を見る"]
+      "word": "quickly",
+      "answer": "素早く",
+      "choices": ["ゆっくり", "静かに", "素早く", "丁寧に"],
+      "category": "daily",
+      "difficulty": "intermediate"
     },
     {
       "id": "q010",
-      "word": "quickly",
-      "answer": "素早く",
-      "choices": ["ゆっくり", "静かに", "素早く", "丁寧に"]
+      "word": "decide",
+      "answer": "決める",
+      "choices": ["迷う", "選ぶ", "決める", "諦める"],
+      "category": "daily",
+      "difficulty": "intermediate"
     },
     {
       "id": "q011",
-      "word": "introduce",
-      "answer": "紹介する",
-      "choices": ["紹介する", "招待する", "歓迎する", "案内する"]
+      "word": "borrow",
+      "answer": "借りる",
+      "choices": ["貸す", "借りる", "返す", "預ける"],
+      "category": "daily",
+      "difficulty": "intermediate"
     },
     {
       "id": "q012",
-      "word": "expensive",
-      "answer": "高価な",
-      "choices": ["安い", "高価な", "新しい", "便利な"]
+      "word": "weather",
+      "answer": "天気",
+      "choices": ["季節", "気温", "天気", "風"],
+      "category": "daily",
+      "difficulty": "intermediate"
     },
     {
       "id": "q013",
-      "word": "borrow",
-      "answer": "借りる",
-      "choices": ["貸す", "借りる", "返す", "預ける"]
+      "word": "nostalgic",
+      "answer": "懐かしい",
+      "choices": ["懐かしい", "嬉しい", "悔しい", "切ない"]
+      ,
+      "category": "daily",
+      "difficulty": "advanced"
     },
     {
       "id": "q014",
-      "word": "weather",
-      "answer": "天気",
-      "choices": ["季節", "気温", "天気", "風"]
+      "word": "reluctant",
+      "answer": "気が進まない",
+      "choices": ["積極的な", "気が進まない", "勇敢な", "勤勉な"],
+      "category": "daily",
+      "difficulty": "advanced"
     },
     {
       "id": "q015",
-      "word": "decide",
-      "answer": "決める",
-      "choices": ["迷う", "選ぶ", "決める", "諦める"]
+      "word": "exhausted",
+      "answer": "疲れ果てた",
+      "choices": ["元気な", "退屈な", "疲れ果てた", "驚いた"],
+      "category": "daily",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "q016",
+      "word": "meeting",
+      "answer": "会議",
+      "choices": ["会議", "会場", "面接", "発表"],
+      "category": "business",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "q017",
+      "word": "client",
+      "answer": "顧客",
+      "choices": ["上司", "同僚", "顧客", "部下"],
+      "category": "business",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "q018",
+      "word": "report",
+      "answer": "報告書",
+      "choices": ["契約書", "報告書", "見積書", "請求書"],
+      "category": "business",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "q019",
+      "word": "deadline",
+      "answer": "締め切り",
+      "choices": ["会期", "締め切り", "予算", "目標"],
+      "category": "business",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "q020",
+      "word": "office",
+      "answer": "事務所",
+      "choices": ["工場", "倉庫", "事務所", "店舗"],
+      "category": "business",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "q021",
+      "word": "schedule",
+      "answer": "予定",
+      "choices": ["予算", "予定", "予測", "予感"],
+      "category": "business",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "q022",
+      "word": "negotiate",
+      "answer": "交渉する",
+      "choices": ["契約する", "交渉する", "発表する", "報告する"],
+      "category": "business",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "q023",
+      "word": "budget",
+      "answer": "予算",
+      "choices": ["予算", "経費", "利益", "売上"],
+      "category": "business",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "q024",
+      "word": "proposal",
+      "answer": "提案書",
+      "choices": ["提案書", "領収書", "議事録", "目論見書"],
+      "category": "business",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "q025",
+      "word": "invoice",
+      "answer": "請求書",
+      "choices": ["請求書", "納品書", "明細書", "見積書"],
+      "category": "business",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "q026",
+      "word": "stakeholder",
+      "answer": "利害関係者",
+      "choices": ["利害関係者", "株式投資家", "経営者", "監査人"],
+      "category": "business",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "q027",
+      "word": "leverage",
+      "answer": "活用する",
+      "choices": ["放棄する", "活用する", "委譲する", "却下する"],
+      "category": "business",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "q028",
+      "word": "outsource",
+      "answer": "外注する",
+      "choices": ["内製する", "外注する", "輸入する", "輸出する"],
+      "category": "business",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "q029",
+      "word": "compliance",
+      "answer": "法令遵守",
+      "choices": ["法令遵守", "業務改善", "競争戦略", "顧客対応"],
+      "category": "business",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "q030",
+      "word": "synergy",
+      "answer": "相乗効果",
+      "choices": ["副作用", "相乗効果", "後遺症", "波及効果"],
+      "category": "business",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "q031",
+      "word": "airport",
+      "answer": "空港",
+      "choices": ["駅", "港", "空港", "停留所"],
+      "category": "travel",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "q032",
+      "word": "ticket",
+      "answer": "切符",
+      "choices": ["切符", "領収書", "案内", "地図"],
+      "category": "travel",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "q033",
+      "word": "hotel",
+      "answer": "ホテル",
+      "choices": ["旅館", "ホテル", "民宿", "別荘"],
+      "category": "travel",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "q034",
+      "word": "passport",
+      "answer": "旅券",
+      "choices": ["免許証", "旅券", "保険証", "学生証"],
+      "category": "travel",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "q035",
+      "word": "luggage",
+      "answer": "手荷物",
+      "choices": ["手荷物", "土産", "貴重品", "備品"],
+      "category": "travel",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "q036",
+      "word": "reservation",
+      "answer": "予約",
+      "choices": ["予約", "予定", "予報", "予感"],
+      "category": "travel",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "q037",
+      "word": "departure",
+      "answer": "出発",
+      "choices": ["到着", "出発", "経由", "乗換"],
+      "category": "travel",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "q038",
+      "word": "souvenir",
+      "answer": "土産",
+      "choices": ["記念品", "土産", "贈答品", "戦利品"],
+      "category": "travel",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "q039",
+      "word": "currency",
+      "answer": "通貨",
+      "choices": ["紙幣", "硬貨", "通貨", "為替"],
+      "category": "travel",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "q040",
+      "word": "delay",
+      "answer": "遅延",
+      "choices": ["欠航", "遅延", "停車", "運休"],
+      "category": "travel",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "q041",
+      "word": "itinerary",
+      "answer": "旅程",
+      "choices": ["旅程", "観光地", "行程表", "見取図"],
+      "category": "travel",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "q042",
+      "word": "customs",
+      "answer": "税関",
+      "choices": ["関所", "税関", "検疫", "出入国"],
+      "category": "travel",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "q043",
+      "word": "boarding",
+      "answer": "搭乗",
+      "choices": ["搭乗", "降機", "受託", "通関"],
+      "category": "travel",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "q044",
+      "word": "jet lag",
+      "answer": "時差ぼけ",
+      "choices": ["乗り物酔い", "高山病", "時差ぼけ", "車酔い"],
+      "category": "travel",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "q045",
+      "word": "embassy",
+      "answer": "大使館",
+      "choices": ["大使館", "領事館", "総領事館", "公使館"],
+      "category": "travel",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "q046",
+      "word": "vocabulary",
+      "answer": "語彙",
+      "choices": ["文法", "発音", "語彙", "綴り"],
+      "category": "exam",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "q047",
+      "word": "grammar",
+      "answer": "文法",
+      "choices": ["語彙", "文法", "会話", "読解"],
+      "category": "exam",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "q048",
+      "word": "answer",
+      "answer": "答え",
+      "choices": ["問題", "答え", "解説", "見出し"],
+      "category": "exam",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "q049",
+      "word": "question",
+      "answer": "問題",
+      "choices": ["問題", "正解", "選択肢", "解答用紙"],
+      "category": "exam",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "q050",
+      "word": "subject",
+      "answer": "科目",
+      "choices": ["科目", "課題", "宿題", "提出物"],
+      "category": "exam",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "q051",
+      "word": "analyze",
+      "answer": "分析する",
+      "choices": ["説明する", "分析する", "比較する", "暗記する"],
+      "category": "exam",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "q052",
+      "word": "argument",
+      "answer": "主張",
+      "choices": ["主張", "反論", "結論", "前提"],
+      "category": "exam",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "q053",
+      "word": "evidence",
+      "answer": "証拠",
+      "choices": ["証拠", "事実", "理由", "条件"],
+      "category": "exam",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "q054",
+      "word": "summary",
+      "answer": "要約",
+      "choices": ["要約", "概要", "結論", "目次"],
+      "category": "exam",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "q055",
+      "word": "translate",
+      "answer": "翻訳する",
+      "choices": ["要約する", "翻訳する", "解釈する", "復唱する"],
+      "category": "exam",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "q056",
+      "word": "paraphrase",
+      "answer": "言い換える",
+      "choices": ["言い換える", "省略する", "強調する", "繰り返す"],
+      "category": "exam",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "q057",
+      "word": "infer",
+      "answer": "推測する",
+      "choices": ["推測する", "断定する", "提案する", "暗示する"],
+      "category": "exam",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "q058",
+      "word": "contradict",
+      "answer": "矛盾する",
+      "choices": ["矛盾する", "賛同する", "肯定する", "引用する"],
+      "category": "exam",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "q059",
+      "word": "elaborate",
+      "answer": "詳しく述べる",
+      "choices": ["詳しく述べる", "要約する", "省略する", "脱線する"],
+      "category": "exam",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "q060",
+      "word": "ambiguous",
+      "answer": "曖昧な",
+      "choices": ["明確な", "曖昧な", "厳密な", "簡潔な"],
+      "category": "exam",
+      "difficulty": "advanced"
     }
   ]
 }

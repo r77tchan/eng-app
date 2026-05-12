@@ -87,3 +87,13 @@
   - Designer は機能追加・ロジック変更をしない
   - Evaluator は自分でコードを修正しない
 - デザイントークンが `/docs/` に存在しない場合、Designer フェーズの前にユーザーに用意を依頼する
+
+### Playwright MCP のスクリーンショット / 検証成果物
+
+Designer や Evaluator が Playwright MCP を使う際は以下を厳守する。
+
+- `browser_take_screenshot` で保存するファイルは **必ず `.playwright-mcp/` 配下** に保存すること
+  - ファイル名にもプレフィックス（例: `eval-01-...`, `designer-after-...`）を付けて誰が撮ったか分かるようにする
+- **プロジェクトルートに直接吐き出してはならない**（`.gitignore` で防御してはいるが、作業の整頓のため）
+- 過去のスクショや YAML スナップショットは `.playwright-mcp/` に蓄積されるが、git 追跡外（`.gitignore` 済み）なので気にせず生成してよい
+- 検証ログ（コンソール出力、ネットワークリクエスト）も同様に `.playwright-mcp/` 配下のみに残す
