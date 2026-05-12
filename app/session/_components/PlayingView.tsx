@@ -38,18 +38,18 @@ type Props = {
 /**
  * フィードバック中の「画面クリックで次へ進む」判定。
  *
- * - 以下の要素クリックは次へ進めない (専用アクションを優先):
+ * 専用アクションを優先するため、以下の testid を持つ要素クリックは次へ進まない:
  *   - 中断ボタン (`abort-button`)
  *   - Weblio リンクボタン (`weblio-link-button`)
  *   - 単語の音声再生ボタン (`speak-button`)
  *   - BottomNav 内のリンク (`bottom-nav`) — feedback 中も非表示だが防御的に
- *   - 操作可能 (disabled でない) な button / a
- * - 4 択や「わからない」のような disabled ボタンの上をクリックした場合は
- *   ユーザーの期待 (画面のどこでもクリックで次へ) に合わせて進める
+ *
+ * 選択肢ボタン (`choice`) と「わからない」ボタン (`dont-know-button`) は
+ * フィードバック中 aria-disabled なので onClick 内で early return される一方、
+ * クリックイベントは親要素まで伝播し、ここで「次へ進む」が発火する。
  */
 function isClickToNext(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
-  // 除外対象の testid を持つ祖先があるか
   const blockedTestIds = [
     "abort-button",
     "weblio-link-button",
@@ -59,12 +59,6 @@ function isClickToNext(target: EventTarget | null): boolean {
   for (const id of blockedTestIds) {
     if (target.closest(`[data-testid="${id}"]`)) return false;
   }
-  // disabled でない button への直接クリックは除外
-  // (4 択や DontKnow はフィードバック中 disabled なのでスルーされ、進む)
-  const btn = target.closest("button");
-  if (btn && !(btn as HTMLButtonElement).disabled) return false;
-  // a 要素はそのまま除外 (disabled 属性がない)
-  if (target.closest("a")) return false;
   return true;
 }
 
@@ -134,7 +128,7 @@ export function PlayingView({
         onSpeak={onSpeak}
       />
 
-      <div className="flex-1 min-h-[8px]" />
+      <div className="flex-1 min-h-2" />
 
       <section className="flex flex-col gap-2.5 pb-4 md:pb-2">
         {currentChoices.map((choice, idx) => (

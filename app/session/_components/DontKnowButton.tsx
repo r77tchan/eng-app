@@ -23,11 +23,17 @@ export function DontKnowButton({ isFeedback, onClick }: Props) {
   return (
     <button
       type="button"
-      onClick={onClick}
-      disabled={isFeedback}
+      onClick={() => {
+        // フィードバック中は無効 (連打防止)。
+        // disabled 属性は使わず aria-disabled にすることで、ボタン上の
+        // クリックイベントが親に伝播し、「画面クリックで次へ進む」が動作する。
+        if (isFeedback) return;
+        onClick();
+      }}
+      aria-disabled={isFeedback ? "true" : undefined}
       data-testid="dont-know-button"
       aria-keyshortcuts="Space"
-      className="group mt-1 flex w-full items-center justify-center gap-2.5 rounded-md px-4 py-2.5 text-sm font-semibold text-ink-muted transition-colors duration-150 hover:text-ink disabled:opacity-50"
+      className="group mt-1 flex w-full items-center justify-center gap-2.5 rounded-md px-4 py-2.5 text-sm font-semibold text-ink-muted transition-colors duration-150 hover:text-ink aria-disabled:opacity-50"
       style={{ minHeight: 44 }}
     >
       <span

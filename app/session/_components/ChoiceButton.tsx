@@ -41,12 +41,18 @@ export function ChoiceButton({
   return (
     <button
       type="button"
-      onClick={() => onSelect(choice)}
-      disabled={isFeedback}
+      onClick={() => {
+        // フィードバック中は選択無効 (連打防止)。
+        // disabled 属性は使わず aria-disabled にすることで、ボタン上の
+        // クリックイベントが親に伝播し、「画面クリックで次へ進む」が動作する。
+        if (isFeedback) return;
+        onSelect(choice);
+      }}
+      aria-disabled={isFeedback ? "true" : undefined}
       data-testid="choice"
       data-correct={isAnswer ? "true" : "false"}
       aria-keyshortcuts={String(index + 1)}
-      className={`flex w-full items-center gap-3 rounded-lg border-2 px-4 py-3.5 text-left text-base font-semibold transition-[background-color,border-color,opacity,transform] duration-150 active:scale-[0.985] disabled:active:scale-100 ${containerCls}`}
+      className={`flex w-full items-center gap-3 rounded-lg border-2 px-4 py-3.5 text-left text-base font-semibold transition-[background-color,border-color,opacity,transform] duration-150 active:scale-[0.985] aria-disabled:active:scale-100 ${containerCls}`}
       style={{ minHeight: 56 }}
     >
       <span
