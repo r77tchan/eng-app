@@ -54,9 +54,30 @@
  *                  クリア完了。
  */
 
-const VERSION = "v1.1.0";
+const VERSION = "v1.2.0";
 const CACHE_NAME = `commute-en-${VERSION}`;
 const FULL_CACHE_NAME = `commute-en-full-${VERSION}`;
+
+/**
+ * Next.js 16 App Router の RSC リクエストは URL に `_rsc=<hash>` クエリを付与する。
+ * これは関連ヘッダーから算出されるハッシュで、CDN キャッシュキーとして使う想定。
+ * SW のキャッシュキーにそのまま含めると、precache 済みの `/foo/index.txt` (クエリなし)
+ * とマッチしないため、オフラインで client-side navigation が失敗する。
+ *
+ * 対策: マッチ時・保存時に `_rsc` を剥がした URL に正規化してから扱う。
+ */
+function normalizeUrl(rawUrl) {
+  try {
+    const u = new URL(rawUrl, self.location.href);
+    if (u.searchParams.has("_rsc")) {
+      u.searchParams.delete("_rsc");
+      return u.href;
+    }
+    return rawUrl;
+  } catch {
+    return rawUrl;
+  }
+}
 
 // SW のスコープを基点に解決する (GitHub Pages サブパス配信に対応)
 const SCOPE = (self.registration && self.registration.scope) || self.location.href;
@@ -161,23 +182,50 @@ self.addEventListener("fetch", (event) => {
 /**
  * 最小キャッシュ → フルキャッシュ の順にヒットを確認する。
  * どちらかでヒットすれば cached Response を返す。
+ *
+ * `_rsc` クエリの有無で取りこぼさないよう、まず原リクエストでマッチを試み、
+ * 外れた場合は `_rsc` を剥がした正規化 URL で再試行する。
  */
 async function matchAny(req) {
+  const normalized = normalizeUrl(req.url);
+  const needsFallback = normalized !== req.url;
+
   const minCache = await caches.open(CACHE_NAME);
-  const minHit = await minCache.match(req);
+  let minHit = await minCache.match(req);
+  if (!minHit && needsFallback) {
+    minHit = await minCache.match(normalized);
+  }
   if (minHit) return minHit;
+
   const fullCache = await caches.open(FULL_CACHE_NAME);
-  const fullHit = await fullCache.match(req);
+  let fullHit = await fullCache.match(req);
+  if (!fullHit && needsFallback) {
+    fullHit = await fullCache.match(normalized);
+  }
   return fullHit || null;
+}
+
+/**
+ * 取得済み Response を `_rsc` 抜きの正規化キーで保存する。
+ * これにより、precache (クエリなし) と runtime fetch (クエリあり) が
+ * 同一キャッシュエントリを共有できる。
+ */
+async function putNormalized(cacheName, req, res) {
+  try {
+    const cache = await caches.open(cacheName);
+    const key = normalizeUrl(req.url);
+    await cache.put(key, res);
+  } catch {
+    // 保存失敗は握りつぶす (UI を止めない)
+  }
 }
 
 async function networkFirst(req) {
   try {
     const res = await fetch(req);
     if (res && res.ok) {
-      // ナビゲーション応答は最小キャッシュ側を更新しておく
-      const cache = await caches.open(CACHE_NAME);
-      cache.put(req, res.clone()).catch(() => {});
+      // ナビゲーション応答は最小キャッシュ側を更新しておく (`_rsc` は剥がす)
+      putNormalized(CACHE_NAME, req, res.clone()).catch(() => {});
     }
     return res;
   } catch {
@@ -199,14 +247,11 @@ async function networkFirst(req) {
 async function cacheFirst(req) {
   const cached = await matchAny(req);
   if (cached) {
-    // 裏でネットワーク更新 (失敗は無視) — 最小キャッシュ側を更新する
+    // 裏でネットワーク更新 (失敗は無視) — 最小キャッシュ側を `_rsc` 抜きで更新
     fetch(req)
       .then((res) => {
         if (res && res.ok) {
-          caches
-            .open(CACHE_NAME)
-            .then((c) => c.put(req, res.clone()))
-            .catch(() => {});
+          putNormalized(CACHE_NAME, req, res.clone()).catch(() => {});
         }
       })
       .catch(() => {});
@@ -215,8 +260,7 @@ async function cacheFirst(req) {
   try {
     const res = await fetch(req);
     if (res && res.ok) {
-      const cache = await caches.open(CACHE_NAME);
-      cache.put(req, res.clone()).catch(() => {});
+      await putNormalized(CACHE_NAME, req, res.clone());
     }
     return res;
   } catch {

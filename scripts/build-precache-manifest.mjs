@@ -41,7 +41,11 @@
  *   - `sw.js` (SW 自身を SW がキャッシュすると更新が止まる)
  *   - `.nojekyll` (Pages のメタファイル、配信不要)
  *   - `*.map` (ソースマップ、容量浪費)
- *   - `*.txt` で始まる `__next.` (RSC manifest 内部ファイル、配信不要)
+ *
+ * 補足: 以前は `__next.*` で始まるファイルを「配信時に使用しない」として除外していたが、
+ * Next.js 16 では `__next._tree.txt` / `__next.<segment>.__PAGE__.txt` 等が
+ * App Router のプリフェッチ RSC ペイロードとして runtime に fetch されるため、
+ * 除外するとオフラインで client-side navigation が失敗する。よって全て含める。
  *
  * 失敗ハンドリング:
  *   - `out/` が存在しない場合は明確なエラーメッセージで `process.exit(1)` する。
@@ -89,9 +93,6 @@ function isExcluded(relPosix) {
   if (relPosix === ".nojekyll") return true;
   // ソースマップ
   if (relPosix.endsWith(".map")) return true;
-  // Next.js が出力する内部メタファイル群 (RSC payload / props プリレンダ等)
-  // ファイル名が `__next.` で始まる .txt は配信時に使用しないため除外
-  if (path.basename(relPosix).startsWith("__next.")) return true;
   return false;
 }
 
