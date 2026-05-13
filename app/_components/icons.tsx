@@ -160,3 +160,114 @@ export function RefreshIcon({
     </svg>
   );
 }
+
+/**
+ * Sprint 9: ダウンロード矢印 (トレイへ向かう矢印)。
+ * 「オフライン用にダウンロード」のプライマリ CTA に使う。
+ */
+export function DownloadIcon({
+  width = 16,
+  height = 16,
+  ...rest
+}: IconProps) {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...rest}
+    >
+      <path d="M8 2v8" />
+      <path d="M4.5 7l3.5 3.5L11.5 7" />
+      <path d="M2.5 13h11" />
+    </svg>
+  );
+}
+
+/**
+ * Sprint 9: エラー表示用の三角警告アイコン。
+ * `--color-error` と組み合わせて使う。
+ */
+export function AlertIcon({
+  width = 14,
+  height = 14,
+  ...rest
+}: IconProps) {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...rest}
+    >
+      <path d="M8 2L1.5 13.5h13L8 2z" />
+      <path d="M8 6.5v3" />
+      <path d="M8 11.5v.01" />
+    </svg>
+  );
+}
+
+/**
+ * Sprint 9: ゴミ箱 (キャッシュ削除) アイコン。
+ */
+export function TrashIcon({
+  width = 14,
+  height = 14,
+  ...rest
+}: IconProps) {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...rest}
+    >
+      <path d="M2.5 4.5h11" />
+      <path d="M6 4.5V3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1.5" />
+      <path d="M4 4.5l.75 8.5a1 1 0 0 0 1 .9h4.5a1 1 0 0 0 1-.9L12 4.5" />
+      <path d="M6.5 7.5v3.5" />
+      <path d="M9.5 7.5v3.5" />
+    </svg>
+  );
+}
+
+/**
+ * Sprint 9: 完了円形バッジ用の太いチェック (CheckIcon と区別)。
+ * 円形 success バッジ内に大きく置くために、bold な stroke を使う。
+ */
+export function CheckBoldIcon({
+  width = 18,
+  height = 18,
+  ...rest
+}: IconProps) {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 20 20"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...rest}
+    >
+      <path d="M4 10.5l4 4 8-8.5" />
+    </svg>
+  );
+}

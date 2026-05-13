@@ -13,6 +13,7 @@ import { SettingsSection } from "./SettingsSection";
 import { SegmentedControl } from "./SegmentedControl";
 import { ToggleSwitch } from "./ToggleSwitch";
 import { DataResetSection } from "./DataResetSection";
+import { OfflineSection } from "./OfflineSection";
 import { AppAboutSection } from "./AppAboutSection";
 
 const THEME_OPTIONS: ReadonlyArray<{
@@ -34,7 +35,8 @@ const THEME_OPTIONS: ReadonlyArray<{
  *   03 / Sound    — 効果音 ON/OFF (テスト再生付き)
  *   04 / Speech   — 単語読み上げ ON/OFF (Sprint 7)
  *   05 / Data     — 学習データのリセット
- *   06 / About    — バージョン情報
+ *   06 / Offline  — ワンボタンフルキャッシュ (Sprint 9)
+ *   07 / About    — バージョン情報
  */
 export function SettingsView() {
   const settings = useSettings();
@@ -179,6 +181,9 @@ export function SettingsView() {
       >
         <DataResetSection />
       </SettingsSection>
+
+      {/* Sprint 9: ワンボタンでサイト全体をオフラインキャッシュする */}
+      <OfflineSection />
 
       <AppAboutSection />
     </main>

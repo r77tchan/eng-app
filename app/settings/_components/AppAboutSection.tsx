@@ -1,7 +1,7 @@
 import { SettingsSection } from "./SettingsSection";
 
-const APP_VERSION = "1.0.0";
-const APP_BUILD = "Sprint · 5/5";
+const APP_VERSION = "1.1.0";
+const APP_BUILD = "Sprint · 9/9";
 
 /**
  * アプリ情報セクション (設定画面の最下段)。
@@ -14,7 +14,7 @@ const APP_BUILD = "Sprint · 5/5";
  */
 export function AppAboutSection() {
   return (
-    <SettingsSection badge="06" shortLabel="About" title="アプリ情報">
+    <SettingsSection badge="07" shortLabel="About" title="アプリ情報">
       <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 border-t border-line pt-3">
         <dt className="font-mono text-[10px] tracking-[0.18em] text-ink-muted uppercase">
           Version

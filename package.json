@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && touch out/.nojekyll",
-    "build:pages": "NEXT_PUBLIC_BASE_PATH=${NEXT_PUBLIC_BASE_PATH:-/eng-app} next build && touch out/.nojekyll",
+    "build": "next build && node scripts/build-precache-manifest.mjs && touch out/.nojekyll",
+    "build:pages": "NEXT_PUBLIC_BASE_PATH=${NEXT_PUBLIC_BASE_PATH:-/eng-app} next build && NEXT_PUBLIC_BASE_PATH=${NEXT_PUBLIC_BASE_PATH:-/eng-app} node scripts/build-precache-manifest.mjs && touch out/.nojekyll",
     "export": "next build",
     "preview": "npx serve out -l 5173",
     "start": "next start",
